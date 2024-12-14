@@ -4,8 +4,8 @@ pipeline {
     DOCKER_REGISTRY_USERNAME = credentials('DOCKER_REGISTRY_USERNAME')
     DOCKER_REGISTRY_PASSWORD = credentials('DOCKER_REGISTRY_PASSWORD')
     GITHUB_USERNAME = credentials('GITHUB_USERNAME')
-    FINAL_PROJECT_MANIFEST_REPO_URL = credentials('FINAL_PROJECT_MANIFEST_REPO_URL')
-    FINAL_PROJECT_MANIFEST_REPO_NAME = credentials('FINAL_PROJECT_MANIFEST_REPO_NAME')
+    FINAL_PROJECT_MANIFEST_REPO_URL = "https://github.com/1653072/techmaster-final-project-obo-manifest.git"
+    FINAL_PROJECT_MANIFEST_REPO_NAME = "techmaster-final-project-obo-manifest"
   }
 
   stages {
