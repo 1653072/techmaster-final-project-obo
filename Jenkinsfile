@@ -3,7 +3,6 @@ pipeline {
   environment {
     DOCKER_REGISTRY_USERNAME = credentials('DOCKER_REGISTRY_USERNAME')
     DOCKER_REGISTRY_PASSWORD = credentials('DOCKER_REGISTRY_PASSWORD')
-    GITHUB_USERNAME = credentials('GITHUB_USERNAME')
     FINAL_PROJECT_MANIFEST_REPO_URL = "https://github.com/1653072/techmaster-final-project-obo-manifest.git"
     FINAL_PROJECT_MANIFEST_REPO_NAME = "techmaster-final-project-obo-manifest"
   }
@@ -55,6 +54,7 @@ pipeline {
             rm -rf ${FINAL_PROJECT_MANIFEST_REPO_NAME}
             git clone ${FINAL_PROJECT_MANIFEST_REPO_URL}
             git checkout develop 2>/dev/null || git checkout -b develop
+            git pull origin develop
           '''
         }
         script {
@@ -115,6 +115,7 @@ pipeline {
             rm -rf ${FINAL_PROJECT_MANIFEST_REPO_NAME}
             git clone ${FINAL_PROJECT_MANIFEST_REPO_URL}
             git checkout release 2>/dev/null || git checkout -b release
+            git pull origin release
           '''
         }
         script {
