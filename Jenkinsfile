@@ -63,7 +63,7 @@ pipeline {
           def app_deploy_data = readYaml file: app_deploy_filename
           app_deploy_data.spec.template.spec.containers[0].image = "${DOCKER_REGISTRY_USERNAME}/my_obo:v1.${BUILD_NUMBER}-dev"
           sh "rm $app_deploy_filename"
-          writeYaml file: filename, data: app_deploy_data
+          writeYaml file: app_deploy_filename, data: app_deploy_data
           sh "cat $app_deploy_filename"
           // ---
           sh "echo 'Updating the K8S manifests: Obo Config Database URL (Namespace: dev)'"
@@ -71,7 +71,7 @@ pipeline {
           def obo_config_data = readYaml file: obo_config_filename
           obo_config_data.stringData.DATABASE_URL = "jdbc:mysql://mysql-service.dev.svc.cluster.local:3306/obo?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
           sh "rm $obo_config_filename"
-          writeYaml file: filename, data: obo_config_data
+          writeYaml file: obo_config_filename, data: obo_config_data
         }
         withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_PERSONAL_ACCESS_TOKEN', gitToolName: 'Default')]) {
           sh '''
@@ -124,7 +124,7 @@ pipeline {
           def app_deploy_data = readYaml file: app_deploy_filename
           app_deploy_data.spec.template.spec.containers[0].image = "${DOCKER_REGISTRY_USERNAME}/my_obo:${IMAGE_TAG}"
           sh "rm $app_deploy_filename"
-          writeYaml file: filename, data: app_deploy_data
+          writeYaml file: app_deploy_filename, data: app_deploy_data
           sh "cat $app_deploy_filename"
           // ---
           sh "echo 'Updating the K8S manifests: Obo Config Database URL (Namespace: prd)'"
@@ -132,7 +132,7 @@ pipeline {
           def obo_config_data = readYaml file: obo_config_filename
           obo_config_data.stringData.DATABASE_URL = "jdbc:mysql://mysql-service.prd.svc.cluster.local:3306/obo?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
           sh "rm $obo_config_filename"
-          writeYaml file: filename, data: obo_config_data
+          writeYaml file: obo_config_filename, data: obo_config_data
         }
         withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_PERSONAL_ACCESS_TOKEN', gitToolName: 'Default')]) {
           sh '''
