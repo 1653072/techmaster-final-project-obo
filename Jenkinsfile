@@ -65,6 +65,13 @@ pipeline {
           sh "rm $app_deploy_filename"
           writeYaml file: filename, data: app_deploy_data
           sh "cat $app_deploy_filename"
+          // ---
+          sh "echo 'Updating the K8S manifests: Obo Config Database URL (Namespace: dev)'"
+          def obo_config_filename = '${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/obo_config.yaml'
+          def obo_config_data = readYaml file: obo_config_filename
+          obo_config_data.stringData.DATABASE_URL = "jdbc:mysql://mysql-service.dev.svc.cluster.local:3306/obo?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+          sh "rm $obo_config_filename"
+          writeYaml file: filename, data: obo_config_data
         }
         withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_PERSONAL_ACCESS_TOKEN', gitToolName: 'Default')]) {
           sh '''
@@ -118,6 +125,13 @@ pipeline {
           sh "rm $app_deploy_filename"
           writeYaml file: filename, data: app_deploy_data
           sh "cat $app_deploy_filename"
+          // ---
+          sh "echo 'Updating the K8S manifests: Obo Config Database URL (Namespace: prd)'"
+          def obo_config_filename = '${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/obo_config.yaml'
+          def obo_config_data = readYaml file: obo_config_filename
+          obo_config_data.stringData.DATABASE_URL = "jdbc:mysql://mysql-service.prd.svc.cluster.local:3306/obo?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+          sh "rm $obo_config_filename"
+          writeYaml file: filename, data: obo_config_data
         }
         withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_PERSONAL_ACCESS_TOKEN', gitToolName: 'Default')]) {
           sh '''
