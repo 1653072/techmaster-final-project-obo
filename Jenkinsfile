@@ -3,8 +3,8 @@ pipeline {
   environment {
     DOCKER_REGISTRY_USERNAME = credentials('DOCKER_REGISTRY_USERNAME')
     DOCKER_REGISTRY_PASSWORD = credentials('DOCKER_REGISTRY_PASSWORD')
-    FINAL_PROJECT_MANIFEST_REPO_URL = "https://github.com/1653072/techmaster-final-project-obo-manifest.git"
-    FINAL_PROJECT_MANIFEST_REPO_NAME = "techmaster-final-project-obo-manifest"
+    FINAL_PROJECT_MANIFEST_REPO_URL = credentials('FINAL_PROJECT_MANIFEST_REPO_URL')
+    FINAL_PROJECT_MANIFEST_REPO_NAME = credentials('FINAL_PROJECT_MANIFEST_REPO_NAME')
   }
 
   stages {
@@ -76,6 +76,7 @@ pipeline {
         }
         withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_PERSONAL_ACCESS_TOKEN', gitToolName: 'Default')]) {
           sh '''
+            cd ${FINAL_PROJECT_MANIFEST_REPO_NAME}
             git config user.email "jenkins@example.com"
             git config user.name "Jenkins"
             git add .
@@ -137,6 +138,7 @@ pipeline {
         }
         withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_PERSONAL_ACCESS_TOKEN', gitToolName: 'Default')]) {
           sh '''
+            cd ${FINAL_PROJECT_MANIFEST_REPO_NAME}
             git config user.email "jenkins@example.com"
             git config user.name "Jenkins"
             git add .
