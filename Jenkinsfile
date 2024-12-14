@@ -146,5 +146,21 @@ pipeline {
         }
       }
     }
+
+    // In both branches ("develop" and "release"), we'll clean up all unused containers, networks, images and volumes.
+    stage('Cleanup Unused Docker Objects') {
+      when {
+        anyOf {
+          branch 'develop'
+          branch 'release'
+        }
+      }
+      steps {
+        sh '''
+          echo "Starting to clean up all unused docker containers, networks, images, and volumes"
+          docker system prune --force
+        '''
+      }
+    }
   }
 }
