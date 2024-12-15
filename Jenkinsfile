@@ -5,8 +5,8 @@ pipeline {
     DOCKER_REGISTRY_PASSWORD = credentials('DOCKER_REGISTRY_PASSWORD')
     FINAL_PROJECT_MANIFEST_REPO_URL = credentials('FINAL_PROJECT_MANIFEST_REPO_URL')
     FINAL_PROJECT_MANIFEST_REPO_NAME = credentials('FINAL_PROJECT_MANIFEST_REPO_NAME')
-    APP_SERVICE_NODE_PORT_DEV = 30000
-    APP_SERVICE_NODE_PORT_PRD = 30001
+    APP_SERVICE_NODE_PORT_DEV = "30000"
+    APP_SERVICE_NODE_PORT_PRD = "30001"
   }
 
   stages {
@@ -72,7 +72,7 @@ pipeline {
           sh "echo 'Updating the K8S manifests: App Service'"
           def app_service_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/app_service.yaml"
           def app_service_data = readYaml file: app_service_filename
-          app_service_data.spec.ports[0].nodePort = "${APP_SERVICE_NODE_PORT_DEV}"
+          app_service_data.spec.ports[0].nodePort = "${APP_SERVICE_NODE_PORT_DEV}".toInteger()
           sh "rm $app_service_filename"
           writeYaml file: app_service_filename, data: app_service_data
           sh "cat $app_service_filename"
@@ -142,7 +142,7 @@ pipeline {
           sh "echo 'Updating the K8S manifests: App Service'"
           def app_service_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/app_service.yaml"
           def app_service_data = readYaml file: app_service_filename
-          app_service_data.spec.ports[0].nodePort = "${APP_SERVICE_NODE_PORT_PRD}"
+          app_service_data.spec.ports[0].nodePort = "${APP_SERVICE_NODE_PORT_PRD}".toInteger()
           sh "rm $app_service_filename"
           writeYaml file: app_service_filename, data: app_service_data
           sh "cat $app_service_filename"
