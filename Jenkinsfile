@@ -5,6 +5,8 @@ pipeline {
     DOCKER_REGISTRY_PASSWORD = credentials('DOCKER_REGISTRY_PASSWORD')
     FINAL_PROJECT_MANIFEST_REPO_URL = credentials('FINAL_PROJECT_MANIFEST_REPO_URL')
     FINAL_PROJECT_MANIFEST_REPO_NAME = credentials('FINAL_PROJECT_MANIFEST_REPO_NAME')
+    APP_SERVICE_NODE_PORT_DEV = 30000
+    APP_SERVICE_NODE_PORT_PRD = 30001
   }
 
   stages {
@@ -67,6 +69,14 @@ pipeline {
           writeYaml file: app_deploy_filename, data: app_deploy_data
           sh "cat $app_deploy_filename"
           // ---
+          sh "echo 'Updating the K8S manifests: App Service'"
+          def app_service_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/app_deployment.yaml"
+          def app_service_data = readYaml file: app_service_filename
+          app_service_data.spec.ports[0].nodePort = ${APP_SERVICE_NODE_PORT_DEV}
+          sh "rm $app_service_filename"
+          writeYaml file: app_service_filename, data: app_service_data
+          sh "cat $app_service_filename"
+          // ---
           sh "echo 'Updating the K8S manifests: Obo Config Database URL (Namespace: dev)'"
           def obo_config_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/obo_config.yaml"
           def obo_config_data = readYaml file: obo_config_filename
@@ -128,6 +138,14 @@ pipeline {
           sh "rm $app_deploy_filename"
           writeYaml file: app_deploy_filename, data: app_deploy_data
           sh "cat $app_deploy_filename"
+          // ---
+          sh "echo 'Updating the K8S manifests: App Service'"
+          def app_service_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/app_deployment.yaml"
+          def app_service_data = readYaml file: app_service_filename
+          app_service_data.spec.ports[0].nodePort = ${APP_SERVICE_NODE_PORT_PRD}
+          sh "rm $app_service_filename"
+          writeYaml file: app_service_filename, data: app_service_data
+          sh "cat $app_service_filename"
           // ---
           sh "echo 'Updating the K8S manifests: Obo Config Database URL (Namespace: prd)'"
           def obo_config_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/obo_config.yaml"
