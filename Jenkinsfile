@@ -70,7 +70,7 @@ pipeline {
           sh "cat $app_deploy_filename"
           // ---
           sh "echo 'Updating the K8S manifests: App Service'"
-          def app_service_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/app_deployment.yaml"
+          def app_service_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/app_service.yaml"
           def app_service_data = readYaml file: app_service_filename
           app_service_data.spec.ports[0].nodePort = ${APP_SERVICE_NODE_PORT_DEV}
           sh "rm $app_service_filename"
@@ -140,7 +140,7 @@ pipeline {
           sh "cat $app_deploy_filename"
           // ---
           sh "echo 'Updating the K8S manifests: App Service'"
-          def app_service_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/app_deployment.yaml"
+          def app_service_filename = "${FINAL_PROJECT_MANIFEST_REPO_NAME}/templates/app_service.yaml"
           def app_service_data = readYaml file: app_service_filename
           app_service_data.spec.ports[0].nodePort = ${APP_SERVICE_NODE_PORT_PRD}
           sh "rm $app_service_filename"
